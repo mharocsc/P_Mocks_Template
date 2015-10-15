@@ -1,0 +1,58 @@
+﻿
+@Html.DevExpress().GridView(settings =>
+{
+    settings.Name = "TaskInputGrid";
+    settings.KeyFieldName = "TaskID";
+    settings.CallbackRouteValues = new { Controller = "Users", Action = "UsersMaintPartial" };
+    settings.Width = System.Web.UI.WebControls.Unit.Percentage(70);
+
+    settings.Styles.Header.HorizontalAlign = System.Web.UI.WebControls.HorizontalAlign.Center;
+    settings.Settings.ShowFilterRow = true;
+    settings.Settings.GridLines = System.Web.UI.WebControls.GridLines.Vertical;
+
+    settings.Columns.Add(column =>
+    {
+        column.Caption = "#";
+        column.SetDataItemTemplateContent(c =>
+        {
+            ViewContext.Writer.Write(
+                Html.ActionLink("Edit", "EditUsersForm", new { UserID = DataBinder.Eval(c.DataItem, "UserID") }) + "&nbsp;" +
+                Html.ActionLink("Delete", "DeleteUserForm", new { UserID = DataBinder.Eval(c.DataItem, "UserID") },
+                    new { onclick = "return confirm('Do you really want to delete this user?')" })
+            );
+        });
+        column.SetHeaderTemplateContent(c =>
+        {
+            ViewContext.Writer.Write(
+                Html.ActionLink("New", "EditUsersForm", new { UserID = 0 }).ToHtmlString()
+            );
+        });
+        column.Settings.AllowDragDrop = DefaultBoolean.False;
+        column.Settings.AllowSort = DefaultBoolean.False;
+        column.Width = 70;
+    });
+
+    settings.Columns.Add(column =>
+    {
+        column.HeaderStyle.Font.Bold = true;
+        column.FieldName = "Username";
+        column.Width = 100;
+        column.ColumnType = MVCxGridViewColumnType.TextBox;
+        column.SortOrder = DevExpress.Data.ColumnSortOrder.Ascending;
+    });
+    settings.Columns.Add(column =>
+    {
+        column.FieldName = "Name";
+        column.Width = 300;
+        column.ColumnType = MVCxGridViewColumnType.TextBox;
+    });
+    settings.Columns.Add(column =>
+    {
+        column.FieldName = "Email";
+        column.Width = 300;
+        column.ColumnType = MVCxGridViewColumnType.TextBox;
+    });
+
+}).Bind(Model).GetHtml()
+
+

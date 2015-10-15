@@ -1,0 +1,49 @@
+﻿.top_banner {
+    display: table;
+    width: 100%;
+    background-color:lightgray;
+}
+.top_banner h2 {
+    cursor: pointer;
+    font-family: "haptik","Helvetica Neue",Arial,sans-serif;
+    font-weight: bold;
+    font-size: small;
+    float: right;
+    padding: 9px;
+    color: white;
+}
+.top_banner img{
+    float: right;
+    height: 5vh;
+}
+
+.leftbanner{
+    width: 80%;
+    background-color: lightgray;
+    float: left;
+}
+.leftbanner img{
+    float: left;
+}
+
+.rightbanner{
+    width: 20%;
+    float: right;
+    background-color: lightgray;
+}
+
+.home_img{
+    height:60vh;
+    text-align: center;
+    vertical-align:middle;
+}
+.home_img img {
+    display: block;
+    margin: auto;
+    top: 30%;
+    padding-top:200px;
+}
+.UsersGrid{
+    text-align: center;
+
+}

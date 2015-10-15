@@ -1,0 +1,174 @@
+﻿@model P_Mocks_Template.WebUI.ModelViews.EditUserViewModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    Html.EnableClientValidation(true);
+    Html.EnableUnobtrusiveJavaScript(false);
+}
+<script type="text/javascript">
+    $().ready(function () {
+            $("#userform").validate({
+                rules: {
+                    Username: {
+                        required: true,
+                        remote: {
+                            type: 'post',
+                            url: "isUsernameAvailable",
+                            data: {
+                                username: function () {
+                                    return $("#Username").val();
+                                }
+                            },
+                            dataType: 'json'
+                        }
+                    },
+                    Name: {
+                        required: true
+                    },
+                    Password: {
+                        required: true,
+                        minlength: 5,
+                        maxlength: 20
+                    },
+                    ConfirmPassword: {
+                        required: true,
+                        equalTo: "#Password"
+                    },
+                    Email: {
+                        required: true,
+                        email: true,
+                    },
+                    Phone: {
+                        digits: true
+                    }
+                },
+                messages: {
+                    Username: {
+                        remote: "Username already in use"
+                    }
+                },
+                errorPlacement: function(error, element){},
+                submitHandler: function (form) {
+                    form.submit();
+                }
+            });
+    });
+</script>
+<div class="top_banner">
+    <div class="leftbanner"><img src="~/Content/Images/banner.jpg" /></div>
+    <div class="rightbanner"><img src="~/Content/Images/login.icon.png" /></div>
+</div>
+<div>
+    @using (Html.BeginForm("EditUsersForm", "Users", FormMethod.Post, new { @class = "edit_form", @id = "userform" }))
+    {
+        @Html.Hidden("UserID")
+        @Html.DevExpress().FormLayout(formLayoutSettings =>
+        {
+            formLayoutSettings.Name = "dlEditUserForm";
+            formLayoutSettings.Width = Unit.Percentage(50);
+            formLayoutSettings.SettingsItems.HorizontalAlign = FormLayoutHorizontalAlign.Left;
+            formLayoutSettings.ColCount = 1;
+
+            formLayoutSettings.Items.Add(i =>
+            {
+                i.FieldName = "Username";
+                i.HelpText = "Please, enter a valid an unique username.";
+                i.NestedExtension().TextBox(s =>
+                {
+                    s.ShowModelErrors = true;
+                    s.Properties.ValidationSettings.ErrorDisplayMode = ErrorDisplayMode.ImageWithTooltip;
+                    s.Properties.ValidationSettings.Display = Display.Dynamic;
+                });
+            });
+            formLayoutSettings.Items.Add(i =>
+            {
+                i.FieldName = "Name";
+                i.HelpText = "Please, enter your full name.";
+                i.NestedExtension().TextBox(s =>
+                {
+                    s.ShowModelErrors = true;
+                    s.Properties.ValidationSettings.ErrorDisplayMode = ErrorDisplayMode.ImageWithTooltip;
+                    s.Properties.ValidationSettings.Display = Display.Dynamic;
+                });
+            });
+            formLayoutSettings.Items.Add(i =>
+            {
+                i.FieldName = "Email";
+                i.Caption = "E-Mail";
+                i.HelpText = "Please, enter your e-mail.";
+                i.NestedExtension().TextBox(s =>
+                {
+                    s.ShowModelErrors = true;
+                    s.Properties.ValidationSettings.ErrorDisplayMode = ErrorDisplayMode.ImageWithTooltip;
+                    s.Properties.ValidationSettings.Display = Display.Dynamic;
+                    s.Width = 400;
+                });
+            });
+            formLayoutSettings.Items.Add(i =>
+            {
+                i.FieldName = "Phone";
+                i.HelpText = "Please, enter your phone.";
+                i.NestedExtension().TextBox(s =>
+                {
+                    s.ShowModelErrors = true;
+                    s.Properties.ValidationSettings.ErrorDisplayMode = ErrorDisplayMode.ImageWithTooltip;
+                    s.Properties.ValidationSettings.Display = Display.Dynamic;
+                });
+            });
+            formLayoutSettings.Items.Add(i =>
+            {
+                i.FieldName = "Password";
+                i.HelpText = "Password must be between 5 and 20 characters.";
+                i.NestedExtension().TextBox(s =>
+                {
+                    s.ShowModelErrors = true;
+                    s.Properties.ValidationSettings.ErrorDisplayMode = ErrorDisplayMode.ImageWithTooltip;
+                    s.Properties.ValidationSettings.Display = Display.Dynamic;
+                });
+            });
+            formLayoutSettings.Items.Add(i =>
+            {
+                i.FieldName = "ConfirmPassword";
+                i.Caption = "Confirm Password";
+                i.HelpText = "Confirm your password.";
+                i.NestedExtension().TextBox(s =>
+                {
+                    s.ShowModelErrors = true;
+                    s.Properties.ValidationSettings.ErrorDisplayMode = ErrorDisplayMode.ImageWithTooltip;
+                });
+            });
+            formLayoutSettings.Items.AddEmptyItem();
+            formLayoutSettings.Items.Add(i =>
+            {
+                i.ShowCaption = DefaultBoolean.False;
+            }).SetNestedContent(() =>
+            {
+                ViewContext.Writer.Write("<div style='float:right'>");
+                Html.DevExpress().Label(
+                    settings =>
+                    {
+                        settings.ControlStyle.CssClass = "label";
+                    }
+                ).GetHtml();
+                Html.DevExpress().Button(
+                   settings =>
+                   {
+                       settings.Name = "btnUpdate";
+                       settings.ControlStyle.CssClass = "button";
+                       settings.Text = "Save";
+                       settings.UseSubmitBehavior = true;
+                   }
+               ).GetHtml();
+                Html.DevExpress().Button(
+                    settings =>
+                    {
+                        settings.Name = "btnCancel";
+                        settings.ControlStyle.CssClass = "button";
+                        settings.Text = "Cancel";
+                        settings.ClientSideEvents.Click = "function(s, e){ document.location='" + DevExpressHelper.GetUrl(new { Controller = "Users", Action = "UsersMaint" }) + "'; }";
+                    }
+                ).GetHtml();
+                ViewContext.Writer.Write("</div>");
+            });
+        }).GetHtml()
+    }
+</div>
